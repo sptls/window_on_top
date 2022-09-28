@@ -4,9 +4,6 @@ Small app that makes selected window/s be always on top of other windows. Essent
 
 It works in background.
 
-## Update 1.10
- - Now adds (ONTOP) suffix to window title
-
 # Usage
 Download latest compiled version from release page --------->
 
@@ -17,3 +14,9 @@ Download latest compiled version from release page --------->
 # Requirements
     make
     cc
+
+## Update 1.11
+- Fixed title suffix bug
+
+## Update 1.10
+- Now adds (ONTOP) suffix to window title
