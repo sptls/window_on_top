@@ -1,7 +1,10 @@
-#include <stdio.h>
 #include <windows.h>
 
-void *MainThread(void *vargp);
+#define MAX_TITLE_LEN 256
+
+void* MainThread(void *arg);
+void SetTitle(HWND hwnd);
+void RestoreTitle(HWND hwnd);
 
 int main(int argc, char** argv)
 {
@@ -9,10 +12,9 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void *MainThread(void *vargp)
+void* MainThread(void *arg)
 {
     BOOL bWasPressed = FALSE;
-    char title[256];
     int totalWindows = 1;
     int *winList = malloc(totalWindows);
     winList[0] = 0;
@@ -47,28 +49,25 @@ void *MainThread(void *vargp)
                     winList = newList;
                     totalWindows--;
                     
+                    RestoreTitle(hwnd);
                     SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 1000, 800, SWP_NOMOVE | SWP_NOSIZE);
-                    GetWindowTextA(hwnd, title, 256);
-                    printf("Window \"%s\", unset from TOP\n", title);
-                    fflush(stdout);
                 }
             }
             if(addNew == TRUE)
             {
-                GetWindowTextA(hwnd, title, 256);
-                printf("Window \"%s\" set ONTOP\n", title);
-                fflush(stdout);
                 SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 1000, 800, SWP_NOMOVE | SWP_NOSIZE);
                 if(totalWindows == 1)
                 {
                     winList[0] = GetWindowThreadProcessId(hwnd, NULL);
                     totalWindows++;
+                    SetTitle(hwnd);
                 }
                 else
                 {
                     winList = realloc(winList, totalWindows + 1);
                     winList[totalWindows] = GetWindowThreadProcessId(hwnd, NULL);
                     totalWindows++;
+                    SetTitle(hwnd);
                 }
             }
             bWasPressed = FALSE;
@@ -77,4 +76,20 @@ void *MainThread(void *vargp)
             bWasPressed = TRUE;
     }
     free(winList);
+}
+
+void SetTitle(HWND hwnd)
+{
+    char title[MAX_TITLE_LEN];
+    GetWindowTextA(hwnd, title, MAX_TITLE_LEN);
+    strncat(title, " (ONTOP)", MAX_TITLE_LEN - 1);
+    SetWindowTextA(hwnd, title);
+}
+
+void RestoreTitle(HWND hwnd)
+{
+    char title[MAX_TITLE_LEN];
+    GetWindowTextA(hwnd, title, MAX_TITLE_LEN);
+    title[strlen(title) - strlen(" (ONTOP") - 1] = '\0';
+    SetWindowTextA(hwnd, title);
 }
