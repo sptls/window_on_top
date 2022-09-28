@@ -90,6 +90,8 @@ void RestoreTitle(HWND hwnd)
 {
     char title[MAX_TITLE_LEN];
     GetWindowTextA(hwnd, title, MAX_TITLE_LEN);
-    title[strlen(title) - strlen(" (ONTOP") - 1] = '\0';
+    if(strstr(title, " (ONTOP)") == NULL)
+        return;
+    title[strlen(title) - strlen(" (ONTOP)")] = '\0';
     SetWindowTextA(hwnd, title);
 }
