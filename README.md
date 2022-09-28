@@ -1,6 +1,11 @@
 # WINDOWS always on TOP
 Small app that makes selected window/s be always on top of other windows. Essential feature that Windows systems are still missing.
-There is no interface or any notifications what is going on. It works in background.
+~~There is no interface or any notifications what is going on.~~ 
+
+It works in background.
+
+## Update 1.10
+ - Now adds (ONTOP) suffix to window title
 
 # Usage
 Download latest compiled version from release page --------->
